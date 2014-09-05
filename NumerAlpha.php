@@ -16,7 +16,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 }
 
 // Tell everybody who we are
-$wgExtensionCredits['parserhook'][] = array(
+$GLOBALS['wgExtensionCredits']['parserhook'][] = array(
 	'name' => 'NumerAlpha',
 	'version' => '0.5.0',
 	'author' => array( 'Thierry G. Veilleux', 'James Montalvo' ),
@@ -24,6 +24,6 @@ $wgExtensionCredits['parserhook'][] = array(
 	'url' => 'https://www.mediawiki.org/wiki/Extension:NumerAlpha'
 );
 
-$wgMessagesDirs['NumberAlpha'] = __DIR__ . '/i18n';
-$wgHooks['ParserFirstCallInit'][] = 'NumerAlpha::onParserFirstCallInit';
-$wgAutoloadClasses['NumerAlpha'] = __DIR__ . '/NumerAlpha.class.php';
+$GLOBALS['wgMessagesDirs']['NumberAlpha'] = __DIR__ . '/i18n';
+$GLOBALS['wgHooks']['ParserFirstCallInit'][] = 'NumerAlpha::onParserFirstCallInit';
+$GLOBALS['wgAutoloadClasses']['NumerAlpha'] = __DIR__ . '/NumerAlpha.class.php';
