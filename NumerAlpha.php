@@ -5,20 +5,20 @@
  *
  * @link http://www.mediawiki.org/wiki/Extension:NumerAlpha Documentation
  * @file NumerAlpha.php
- * @author Thierry G. Veilleux (Kronoxt)
+ * @author Thierry G. Veilleux (Kronoxt), James Montalvo (jamesmontalvo3)
  * @copyright (C) 2009 Thierry G. Veilleux (Kronoxt)
  * @license http://www.publicdomainmanifesto.org/ Public Domain
  */
 
 // Check if we are being called directly
 if ( !defined( 'MEDIAWIKI' ) ) {
-        die( 'This file is an extension to MediaWiki and thus not a valid entry point.' );
+	die( 'This file is an extension to MediaWiki and thus not a valid entry point.' );
 }
 
 // Tell everybody who we are
 $GLOBALS['wgExtensionCredits']['parserhook'][] = array(
 	'name' => 'NumerAlpha',
-	'version' => '0.5.0',
+	'version' => '0.6.0',
 	'author' => array( 'Thierry G. Veilleux', 'James Montalvo' ),
 	'descriptionmsg' => 'numeralpha-desc',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:NumerAlpha'
@@ -27,3 +27,4 @@ $GLOBALS['wgExtensionCredits']['parserhook'][] = array(
 $GLOBALS['wgMessagesDirs']['NumberAlpha'] = __DIR__ . '/i18n';
 $GLOBALS['wgHooks']['ParserFirstCallInit'][] = 'NumerAlpha::onParserFirstCallInit';
 $GLOBALS['wgAutoloadClasses']['NumerAlpha'] = __DIR__ . '/NumerAlpha.class.php';
+$GLOBALS['wgExtensionMessagesFiles']['NumerAlphaMagic'] = __DIR__ . '/NumerAlpha.magic.php';
