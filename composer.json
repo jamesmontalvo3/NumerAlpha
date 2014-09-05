@@ -1,8 +1,7 @@
 {
 	"name": "mediawiki/numer-alpha",
 	"type": "mediawiki-extension",
-	"description": "Provides methods of inserting incrementing numbers, letters, and roman numerals into MediaWiki.
-",
+	"description": "Provides methods of inserting incrementing numbers, letters, and roman numerals into MediaWiki.",
 	"keywords": [
 		"MediaWiki",
 		"Formatting"
