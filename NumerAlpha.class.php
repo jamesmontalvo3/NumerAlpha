@@ -29,14 +29,15 @@ class NumerAlpha {
 
 	// Hook our callback function into the parser
 	static public function onParserFirstCallInit ( Parser &$parser ) {
+
 		// When the parser sees the <sample> tag, it executes
 		// the wfSampleRender function (see below)
-		$parser->setHook( 'ia', 'NumerAlpha::renderAlpha' );
-		$parser->setHook( 'ir', 'NumerAlpha::renderRoman' );
-		$parser->setHook( 'in', 'NumerAlpha::renderNumeral' );
+		$parser->setHook( 'in', 'NumerAlpha::renderNumeralTag' );
+		$parser->setHook( 'ia', 'NumerAlpha::renderAlphaTag' );
+		$parser->setHook( 'ir', 'NumerAlpha::renderRomanTag' );
+
 		// Always return true from this function. The return value does not denote
 		// success or otherwise have meaning - it just must always be true.
-
 
 		self::$listTypes = array(
 			wfMessage( 'ext-numeralpha-list-type-numeral' )->text() => "numeral",
@@ -69,7 +70,6 @@ class NumerAlpha {
 		if ( ! isset( self::$lists[ $name ] ) ) {
 			self::$lists[ $name ] = array();
 		}
-
 
 		foreach( $rawArgs as $rawArg ) {
 
@@ -183,33 +183,53 @@ class NumerAlpha {
 		return htmlspecialchars( $list[ 'prefix' ] . $counterValue . $list[ 'suffix' ] );
 	}
 
+
 	static protected function getAlphaValue ( $list ) {
-		return 'alpha list type not yet available via counter function';
-	}
 
-	static protected function getRomanValue ( $list ) {
-		return 'roman list type not yet available via counter function';
-	}
+		$num = $list[ 'count' ];
 
-	static public function renderAlpha( $input, array $argv, Parser $parser, PPFrame $frame ) {
-
-		if (isset($argv['reset']) && $argv['reset'] == "yes" OR isset($argv['reset']) && $argv['reset'] == "1") {self::$numer[0] = 1;}
-		if (isset($argv['begin']) && $argv['begin'] != "") {self::$numer[0] = $argv['begin'];}
-		$num = self::$numer[0]++;
-		$num = intval($num);
 		$alpha = "";
 		while ($num >= 1) {
 			$num = $num - 1;
-			$alpha = chr(($num % 26)+97).$alpha; //we use the ascii table. //I don't remember where I pick this idea... but  it's not from me... well I coded it...
+			$alpha = chr( ($num % 26) + 97 ) . $alpha; //we use the ascii table
 			$num = $num / 26;
 		}
 
-		$output = $alpha;
-		return  htmlspecialchars($output .'. '. $input ).'<br/>';
+		return htmlspecialchars( $list[ 'prefix' ] . $alpha . $list[ 'suffix' ] );
+
 	}
 
+	static protected function getRomanValue ( $list ) {
 
-	static public function renderNumeral ( $input, array $argv, Parser $parser, PPFrame $frame ) {
+		$num = $list[ 'count' ];
+
+		$result = '';
+		$equival = array(
+			'm'  => 1000,
+			'cm' => 900,
+			'd'  => 500,
+			'cd' => 400,
+			'c'  => 100,
+			'xc' => 90,
+			'l'  => 50,
+			'xl' => 40,
+			'x'  => 10,
+			'ix' => 9,
+			'v'  => 5,
+			'iv' => 4,
+			'i'  => 1
+		);
+		foreach ($equival as $roma => $val) {
+			$concordances = intval($num / $val);
+			 $result .= str_repeat($roma, $concordances);
+					$num = $num % $val;
+		}
+
+		return htmlspecialchars( $list[ 'prefix' ] . $result . $list[ 'suffix' ] );
+
+	}
+
+	static public function renderNumeralTag ( $input, array $argv, Parser $parser, PPFrame $frame ) {
 		if ( isset( $argv['reset'] ) && $argv['reset'] == "yes" OR isset( $argv['reset'] ) && $argv['reset'] == "1" ) {
 			self::$numer[1] = 1;
 		}
@@ -228,38 +248,36 @@ class NumerAlpha {
 		) ) . '<br />';
 	}
 
+	static public function renderAlphaTag ( $input, array $argv, Parser $parser, PPFrame $frame ) {
+
+		if (isset($argv['reset']) && $argv['reset'] == "yes" OR isset($argv['reset']) && $argv['reset'] == "1") {self::$numer[0] = 1;}
+		if (isset($argv['begin']) && $argv['begin'] != "") {self::$numer[0] = $argv['begin'];}
+		$num = self::$numer[0]++;
+		$num = intval($num);
+
+		return self::getAlphaValue( array(
+			'count' => $num,
+			'prefix' => '',
+			'suffix' => '. ' . $input
+		) ) . '<br />';
+
+	}
+
 	// ...render unto Caesar?
-	static public function renderRoman ( $input, array $argv, Parser $parser, PPFrame $frame ) {
+	static public function renderRomanTag ( $input, array $argv, Parser $parser, PPFrame $frame ) {
 
 		if (isset($argv['reset']) && $argv['reset'] == "yes" OR isset($argv['reset']) && $argv['reset'] == "1") {self::$numer[2] = 1;}
 		if (isset($argv['begin']) && $argv['begin'] != "") {self::$numer[2] = $argv['begin'];}
 		$num = self::$numer[2]++;
-		$n = intval($num);
-		$result = '';
-		$equival = array(
-			'm' => 1000,
-			'cm' => 900,
-			'd' => 500,
-			'cd' => 400,
-			'c' => 100,
-			'xc' => 90,
-			'l' => 50,
-			'xl' => 40,
-			'x' => 10,
-			'ix' => 9,
-			'v' => 5,
-			'iv' => 4,
-			'i' => 1
-		);
-		foreach ($equival as $roma => $val) {
-			$concordances = intval($n / $val);
-			 $result .= str_repeat($roma, $concordances);
-					$n = $n % $val;
-		}
+		$num = intval($num);
 
-		$output = $result;
 
-		return  htmlspecialchars($output .'. '. $input).'<br/>';
+		return self::getRomanValue( array(
+			'count' => $num,
+			'prefix' => '',
+			'suffix' => '. ' . $input
+		) ) . '<br />';
+
 	}
 
 }
