@@ -1,0 +1,28 @@
+{
+	"name": "NumerAlpha",
+	"version": "1.0.0",
+	"author": [
+		"Thierry G. Veilleux",
+		"James Montalvo"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:NumerAlpha",
+	"descriptionmsg": "numeralpha-desc",
+	"type": "parserhook",
+	"MessagesDirs": {
+		"NumerAlpha": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"NumerAlphaMagic": "Magic.php"
+	},
+	"AutoloadClasses": {
+		"NumerAlpha": "NumerAlpha.class.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": [
+			"NumerAlpha::onParserFirstCallInit"
+		]
+	},
+	"manifest_version": 1
+}

@@ -1,30 +1,16 @@
 <?php
-/**
- * NumerAlpha MediaWiki extension - Provides an incremental tag
- * with zero padded numbers, roman and alpha numbers
- *
- * @link http://www.mediawiki.org/wiki/Extension:NumerAlpha Documentation
- * @file NumerAlpha.php
- * @author Thierry G. Veilleux (Kronoxt), James Montalvo (jamesmontalvo3)
- * @copyright (C) 2009 Thierry G. Veilleux (Kronoxt)
- * @license http://www.publicdomainmanifesto.org/ Public Domain
- */
 
-// Check if we are being called directly
-if ( !defined( 'MEDIAWIKI' ) ) {
-	die( 'This file is an extension to MediaWiki and thus not a valid entry point.' );
+if ( function_exists( 'wfLoadExtension' ) ) {
+	wfLoadExtension( 'NumerAlpha' );
+	// Keep i18n globals so mergeMessageFileList.php doesn't break
+	$wgMessagesDirs['NumerAlpha'] = __DIR__ . '/i18n';
+	$wgExtensionMessagesFiles['NumerAlphaMagic'] = __DIR__ . '/Magic.php';
+	wfWarn(
+		'Deprecated PHP entry point used for NumerAlpha extension. ' .
+		'Please use wfLoadExtension instead, ' .
+		'see https://www.mediawiki.org/wiki/Extension_registration for more details.'
+	);
+	return;
+} else {
+	die( 'This version of the NumerAlpha extension requires MediaWiki 1.25+' );
 }
-
-// Tell everybody who we are
-$GLOBALS['wgExtensionCredits']['parserhook'][] = array(
-	'name' => 'NumerAlpha',
-	'version' => '0.6.0',
-	'author' => array( 'Thierry G. Veilleux', 'James Montalvo' ),
-	'descriptionmsg' => 'numeralpha-desc',
-	'url' => 'https://www.mediawiki.org/wiki/Extension:NumerAlpha'
-);
-
-$GLOBALS['wgMessagesDirs']['NumberAlpha'] = __DIR__ . '/i18n';
-$GLOBALS['wgHooks']['ParserFirstCallInit'][] = 'NumerAlpha::onParserFirstCallInit';
-$GLOBALS['wgAutoloadClasses']['NumerAlpha'] = __DIR__ . '/NumerAlpha.class.php';
-$GLOBALS['wgExtensionMessagesFiles']['NumerAlphaMagic'] = __DIR__ . '/NumerAlpha.magic.php';
